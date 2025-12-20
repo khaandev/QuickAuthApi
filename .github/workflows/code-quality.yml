@@ -1,48 +1,43 @@
-name: Laravel Code Quality
+name: Code Quality
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+      - fet/*  # any feature branches
 
 jobs:
-  code-quality:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Checkout your code
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Set up PHP
+      # Setup PHP 8.4 and Composer
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: 8.4
           tools: composer
+          coverage: none
 
-      # 3️⃣ Install Composer dependencies
+      # Install dependencies
       - name: Install Composer dependencies
         run: composer install --no-progress --no-interaction --prefer-dist
 
-      # 4️⃣ Run PHP_CodeSniffer
-      - name: Run PHPCS
+      # Run PHPCS
+      - name: Check code style with PHPCS
         run: ./vendor/bin/phpcs app/
 
-      # 5️⃣ Run PHP CS Fixer (optional, just checks if issues exist)
-      - name: Run PHPCBF (auto-fix)
+      # Auto-fix PHPCS violations (optional)
+      - name: Fix code style with PHPCBF
         run: ./vendor/bin/phpcbf app/
 
-      # 6️⃣ Run PHPStan static analysis
-      - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyse app --level=max
+      # Run PHPStan
+      - name: Static analysis with PHPStan
+        run: ./vendor/bin/phpstan analyse app --level max
 
-      # 7️⃣ Cache Composer for faster builds (optional)
-      - name: Cache Composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+      # Run tests
+      # - name: Run tests
+      #   run: php artisan test --verbose
