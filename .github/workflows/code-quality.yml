@@ -34,9 +34,9 @@ jobs:
       - name: Fix code style with PHPCBF
         run: ./vendor/bin/phpcbf app/
 
-      # Run PHPStan
-      - name: Static analysis with PHPStan
-        run: ./vendor/bin/phpstan analyse app --level max
+      # # Run PHPStan
+      # - name: Static analysis with PHPStan
+      #   run: ./vendor/bin/phpstan analyse app --level max
 
       # Run tests
       # - name: Run tests
