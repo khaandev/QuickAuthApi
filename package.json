@@ -8,8 +8,10 @@
     "prepare": "husky",
     "phpcs": "phpcs app/",
     "phpcbf": "phpcbf app/",
-     "lint": "npm run phpcs",
-     "lint:fix": "npm run phpcbf"
+    "lint": "npm run phpcs",
+    "lint:fix": "npm run phpcbf",
+    "phpstan": "./vendor/bin/phpstan analyse app"
+
 
 
   },
