@@ -19,12 +19,12 @@ class LoginController extends Controller
                 'message' => 'Invalid credentials',
             ], 401);
         }
-        
+
 
         $user->tokens()->delete();
 
         $token = $user->createToken('evertrack-api')->plainTextToken;
-        
+
 
         return response()->json([
             'message' => 'Login successful',
