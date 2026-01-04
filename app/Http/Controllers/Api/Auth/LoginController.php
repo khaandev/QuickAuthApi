@@ -6,31 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\Auth\LoginService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    public function __invoke(LoginRequest $request): JsonResponse
+    public function __invoke(LoginRequest $request,LoginService $loginService): JsonResponse
     {
-        $user = User::where('email', $request->email)->first();
+      $data = $loginService->login(
+        $request->email,
+        $request->password
 
-        if (! $user || ! Hash::check($request->password, hashedValue: $user->password)) {
-            return response()->json([
-                'message' => 'Invalid credentials',
-            ], 401);
-        }
-
-
-        $user->tokens()->delete();
-
-        $token = $user->createToken('evertrack-api')->plainTextToken;
-
+      );
 
         return response()->json([
             'message' => 'Login successful',
-            'token'   => $token,
-            'user'    => new UserResource($user),
+            'token'   => $data['token'],
+            'user'    => new UserResource($data['user']),
         ]);
     }
 }
